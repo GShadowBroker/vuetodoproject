@@ -1,32 +1,59 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app class="grey lighten-4">
+    <Navbar v-on:posted="posted" />
+    <Alert :alertMessage="alertMessage" :alert="alert" :type="type"></Alert>
+    <v-content class="grey lighten-4">
+      <router-view/>
+    </v-content>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import Navbar from '@/components/Navbar.vue'
+import Alert from '@/components/Alert.vue'
+export default {
+  name: 'App',
+  components: {
+    Navbar,
+    Alert
+  },
+  data () {
+    return {
+      alertMessage: '',
+      alert: false,
+      type: 'success'
     }
+  },
+  methods: {
+    posted: function () {
+      this.alert = true
+      this.type = 'success'
+      this.alertMessage = 'Project created successfully'
+      setTimeout(() => {
+        this.alert = false
+      }, 5000)
+    },
+    errored: function () {
+      this.alert = true
+      this.alertMessage = 'There was an error creating the project'
+      this.type = 'error'
+      setTimeout(() => {
+        this.alert = false
+      }, 5000)
+    },
+    deleted: function () {
+      this.alert = true
+      this.alertMessage = 'Project deleted successfully'
+      this.type = 'success'
+      setTimeout(() => {
+        this.alert = false
+      }, 5000)
+    }
+  },
+  mounted () {
+    this.$root.$on('deleted', () => {
+      this.deleted()
+    })
   }
 }
-</style>
+</script>
