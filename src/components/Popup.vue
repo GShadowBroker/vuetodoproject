@@ -145,7 +145,7 @@ export default {
           status: 'ongoing'
         }
 
-        axios.post('http://127.0.0.1:3000/api/projects/create', project)
+        axios.post('http://127.0.0.1:3000/api/projects/create', project, { timeout: 4000 })
           .then(res => {
             this.$emit('posted')
             this.dialog = false
@@ -156,6 +156,8 @@ export default {
           })
           .catch(err => {
             this.$emit('errored')
+            this.dialog = false
+            this.loadingBtn = false
             console.log(err)
           })
       }
